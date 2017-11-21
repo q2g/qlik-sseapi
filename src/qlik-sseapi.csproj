@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">netcoreapp2.0;netstandard2.0;net452;net462</TargetFrameworks> 
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Copyright>Copyright ©  2017</Copyright>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <Authors>Konrad Mattheis</Authors>
+    <Company>akquinet f&amp;c</Company>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" Version="3.4.1" />
+    <PackageReference Include="Grpc" Version="1.7.1" />
+    <PackageReference Include="Grpc.Core" Version="1.7.1" />
+    <PackageReference Include="Grpc.Tools" Version="1.7.1" />
+    <PackageReference Include="System.Interactive.Async" Version="3.1.1" />
+  </ItemGroup>
+
+  <Target Name="ProtoC" AfterTargets="BeforeBuild">
+    <!-- ToDo: check operating system and fetch the correct ToolPath linux / macosx 32/64bit -->
+    <CreateProperty Value="@(PackageReference-&gt;Metadata('Version'))">
+      <Output PropertyName="gRPC_Version" Condition="'%(PackageReference.Identity)' == 'Grpc.Tools'" TaskParameter="Value" />
+    </CreateProperty>
+
+    <PropertyGroup>
+      <gRPC_Path>$(NuGetPackageRoot)\grpc.tools\$(gRPC_Version)\tools</gRPC_Path>
+    </PropertyGroup>
+    
+    <!--Extention-->
+    <CreateProperty Value="">
+      <Output PropertyName="gRPC_OSprotocExt" TaskParameter="Value" />
+    </CreateProperty>
+    <CreateProperty Value=".exe" Condition="'$(OS)'=='Windows_NT'">
+      <Output PropertyName="gRPC_OSprotocExt" TaskParameter="Value" />
+    </CreateProperty>
+   
+    <!--OS-->
+    <CreateProperty Value="linux">
+      <Output PropertyName="gRPC_OSPath" TaskParameter="Value" />
+    </CreateProperty>
+    <CreateProperty Value="windows" Condition="'$(OS)'=='Windows_NT'">
+      <Output PropertyName="gRPC_OSPath" TaskParameter="Value" />
+    </CreateProperty>
+    <CreateProperty Value="$(gRPC_Path)\$(gRPC_OSPath)_x64\">
+      <Output PropertyName="gRPC_Path" TaskParameter="Value" />
+    </CreateProperty>
+    <Exec WorkingDirectory="$(ProjectDir)" Command="$(gRPC_Path)protoc --grpc_out=. --csharp_out=. -I&quot;$(ProjectDir).&quot; --plugin=protoc-gen-grpc=&quot;$(gRPC_Path)grpc_csharp_plugin$(gRPC_OSprotocExt)&quot; &quot;$(ProjectDir)ServerSideExtension.proto&quot;" />
+</Target>
+</Project>
