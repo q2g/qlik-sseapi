@@ -6,8 +6,13 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <Copyright>Copyright ©  2017</Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <Authors>Konrad Mattheis</Authors>
-    <Company>akquinet f&amp;c</Company>
+    <Authors>Konrad Mattheis, Martin Berthold</Authors>
+    <Company>q2g</Company>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/q2g/qlik-sseapi/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/q2g/qlik-sseapi/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/q2g/qlik-sseapi/</RepositoryUrl>
+    <PackageTags>Qlik, SSE</PackageTags>
+    <Description>This packages allows to easy build a connector for the qlik sse api</Description>
   </PropertyGroup>
 
   <ItemGroup>
