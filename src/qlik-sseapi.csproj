@@ -2,26 +2,51 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.0</TargetFramework>
-    <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">netcoreapp2.0;netstandard2.0;net452;net462</TargetFrameworks> 
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <TargetFrameworks Condition="'$(OS)' == 'Windows_NT'">netcoreapp2.0;netstandard2.0;net452;net462</TargetFrameworks>     
     <Copyright>Copyright ©  2017</Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Authors>Konrad Mattheis, Martin Berthold</Authors>
     <Company>q2g</Company>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/q2g/qlik-sseapi/master/LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>https://github.com/q2g/qlik-sseapi/</PackageProjectUrl>
     <RepositoryUrl>https://github.com/q2g/qlik-sseapi/</RepositoryUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/q2g/qlik-sseapi/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://www.nuget.org/packages/qlik-sseapi/</PackageProjectUrl>
     <PackageTags>Qlik, SSE</PackageTags>
     <Description>This packages allows to easy build a connector for the qlik sse api</Description>
-  </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Google.Protobuf" Version="3.4.1" />
-    <PackageReference Include="Grpc" Version="1.7.1" />
-    <PackageReference Include="Grpc.Core" Version="1.7.1" />
-    <PackageReference Include="Grpc.Tools" Version="1.7.1" />
-    <PackageReference Include="System.Interactive.Async" Version="3.1.1" />
-  </ItemGroup>
+    <Version>$(GitVersion_NuGetVersion)</Version>
+    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+  </PropertyGroup>
+  
+  <Choose>
+    <When Condition="'$(Configuration)' == 'Release'">
+      <PropertyGroup>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <Target Name="WriteVersion" AfterTargets="GetVersion">
+    <WriteLinesToFile File="$(SolutionDir)\obj\version.txt" Lines="$(GitVersion_NuGetVersion)" Overwrite="true" />
+  </Target>
+  <Target Name="SetPackageVersionFromFile" BeforeTargets="GenerateNuspec">
+    <ReadLinesFromFile File="$(SolutionDir)\obj\version.txt">
+      <Output TaskParameter="Lines" PropertyName="PackageVersion" />
+    </ReadLinesFromFile>
+  </Target>
+
+  <Target Name="PublishToNugetWithAPIKey" AfterTargets="GenerateNuspec">
+    <ReadLinesFromFile File="$(SolutionDir)\..\..\nugetapikey.txt">
+      <Output TaskParameter="Lines" PropertyName="NugetAPIKey" />
+    </ReadLinesFromFile>
+    <Exec WorkingDirectory="$(BaseDir)" Command="dotnet nuget push $(PackageOutputAbsolutePath)$(PackageId).$(PackageVersion).nupkg -k $(NugetAPIKey) -s https://api.nuget.org/v3/index.json" />
+  </Target>
 
   <Target Name="ProtoC" AfterTargets="BeforeBuild">
     <!-- ToDo: check operating system and fetch the correct ToolPath linux / macosx 32/64bit -->
@@ -52,5 +77,16 @@
       <Output PropertyName="gRPC_Path" TaskParameter="Value" />
     </CreateProperty>
     <Exec WorkingDirectory="$(ProjectDir)" Command="$(gRPC_Path)protoc --grpc_out=. --csharp_out=. -I&quot;$(ProjectDir).&quot; --plugin=protoc-gen-grpc=&quot;$(gRPC_Path)grpc_csharp_plugin$(gRPC_OSprotocExt)&quot; &quot;$(ProjectDir)ServerSideExtension.proto&quot;" />
-</Target>
+  </Target>
+
+  <ItemGroup>
+    <PackageReference Include="GitVersionTask" Version="4.0.0-beta0008">
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Google.Protobuf" Version="3.4.1" />
+    <PackageReference Include="Grpc" Version="1.7.1" />
+    <PackageReference Include="Grpc.Core" Version="1.7.1" />
+    <PackageReference Include="Grpc.Tools" Version="1.7.1" />
+    <PackageReference Include="System.Interactive.Async" Version="3.1.1" />
+  </ItemGroup>
 </Project>
