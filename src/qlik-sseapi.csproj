@@ -87,6 +87,6 @@
     <PackageReference Include="Grpc" Version="1.11.0" />
     <PackageReference Include="Grpc.Core" Version="1.11.0" />
     <PackageReference Include="Grpc.Tools" Version="1.11.0" />
-    <PackageReference Include="System.Interactive.Async" Version="3.1.1" />
+    <PackageReference Include="System.Interactive.Async" Version="3.2.0" />
   </ItemGroup>
 </Project>
