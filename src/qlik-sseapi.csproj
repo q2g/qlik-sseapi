@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>       
     <Copyright>Copyright ©  2017</Copyright>
@@ -12,16 +12,13 @@
     <Description>This packages allows to easy build a connector for the qlik sse api</Description>
 
     <Version>$(GitVersion_NuGetVersion)</Version>
-    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
-    <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
-    <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
     <RootNamespace>Qlik.Sse</RootNamespace>
   </PropertyGroup>
 
   <Choose>
     <When Condition="'$(OS)' == 'Windows_NT'">
       <PropertyGroup>
-        <TargetFrameworks>netcoreapp2.0;net452;net462</TargetFrameworks>
+        <TargetFrameworks>netcoreapp2.0;net452;</TargetFrameworks>
       </PropertyGroup>
     </When>
     <Otherwise>
@@ -43,59 +40,24 @@
     </Otherwise>
   </Choose>
 
-  <Target Name="WriteVersion" AfterTargets="GetVersion">
-    <WriteLinesToFile File="$(SolutionDir)\obj\version.txt" Lines="$(GitVersion_NuGetVersion)" Overwrite="true" />
-  </Target>
-  <Target Name="SetPackageVersionFromFile" BeforeTargets="GenerateNuspec">
-    <ReadLinesFromFile File="$(SolutionDir)\obj\version.txt">
-      <Output TaskParameter="Lines" PropertyName="PackageVersion" />
-    </ReadLinesFromFile>
-  </Target>
-
   <Target Name="PublishToNugetWithAPIKey" AfterTargets="GenerateNuspec">
     <ReadLinesFromFile File="$(SolutionDir)\..\..\nugetapikey.txt">
       <Output TaskParameter="Lines" PropertyName="NugetAPIKey" />
     </ReadLinesFromFile>
-    <Exec WorkingDirectory="$(BaseDir)" Command="dotnet nuget push $(PackageOutputAbsolutePath)$(PackageId).$(PackageVersion).nupkg -k $(NugetAPIKey) -s https://api.nuget.org/v3/index.json" />
+    <!--<Exec WorkingDirectory="$(BaseDir)" Command="dotnet nuget push $(PackageOutputAbsolutePath)$(PackageId).$(PackageVersion).nupkg -k $(NugetAPIKey) -s https://api.nuget.org/v3/index.json" />-->
   </Target>
-
-  <Target Name="ProtoC" AfterTargets="BeforeBuild">
-    <!-- ToDo: check operating system and fetch the correct ToolPath linux / macosx 32/64bit -->
-    <CreateProperty Value="@(PackageReference-&gt;Metadata('Version'))">
-      <Output PropertyName="gRPC_Version" Condition="'%(PackageReference.Identity)' == 'Grpc.Tools'" TaskParameter="Value" />
-    </CreateProperty>
-
-    <PropertyGroup>
-      <gRPC_Path>$(NuGetPackageRoot)\grpc.tools\$(gRPC_Version)\tools</gRPC_Path>
-    </PropertyGroup>
-    
-    <!--Extention-->
-    <CreateProperty Value="">
-      <Output PropertyName="gRPC_OSprotocExt" TaskParameter="Value" />
-    </CreateProperty>
-    <CreateProperty Value=".exe" Condition="'$(OS)'=='Windows_NT'">
-      <Output PropertyName="gRPC_OSprotocExt" TaskParameter="Value" />
-    </CreateProperty>
-   
-    <!--OS-->
-    <CreateProperty Value="linux">
-      <Output PropertyName="gRPC_OSPath" TaskParameter="Value" />
-    </CreateProperty>
-    <CreateProperty Value="windows" Condition="'$(OS)'=='Windows_NT'">
-      <Output PropertyName="gRPC_OSPath" TaskParameter="Value" />
-    </CreateProperty>
-    <CreateProperty Value="$(gRPC_Path)\$(gRPC_OSPath)_x64\">
-      <Output PropertyName="gRPC_Path" TaskParameter="Value" />
-    </CreateProperty>
-    <Exec WorkingDirectory="$(ProjectDir)" Command="$(gRPC_Path)protoc --grpc_out=. --csharp_out=. -I&quot;$(ProjectDir).&quot; --plugin=protoc-gen-grpc=&quot;$(gRPC_Path)grpc_csharp_plugin$(gRPC_OSprotocExt)&quot; &quot;$(ProjectDir)ServerSideExtension.proto&quot;" />
-  </Target>
-
+	
   <ItemGroup>
-    <PackageReference Include="GitVersionTask" Version="4.0.0-beta0008" />
-    <PackageReference Include="Google.Protobuf" Version="3.5.1" />
-    <PackageReference Include="Grpc" Version="1.11.0" />
-    <PackageReference Include="Grpc.Core" Version="1.11.0" />
-    <PackageReference Include="Grpc.Tools" Version="1.11.0" />
-    <PackageReference Include="System.Interactive.Async" Version="3.1.1" />
+    <PackageReference Include="GitVersionTask" Version="4.0.0" PrivateAssets="all" />
+    <PackageReference Include="Google.Protobuf" Version="3.6.1" />
+    <PackageReference Include="Grpc" Version="1.17.0" />
+    <PackageReference Include="Grpc.Core" Version="1.17.0" />
+    <PackageReference Include="Grpc.Tools" Version="1.17.0" PrivateAssets="all"/>
+    <PackageReference Include="System.Interactive.Async" Version="3.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>	
+	<Protobuf Include="**/*.proto" />	
+    <Protobuf Update="ServerSideExtension.proto" GrpcServices="Client" />
   </ItemGroup>
 </Project>
