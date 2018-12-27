@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>       
-    <Copyright>Copyright ©  2017</Copyright>
+  <PropertyGroup>
+    <Copyright>Copyright © 2017</Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <Authors>Konrad Mattheis, Martin Berthold</Authors>
     <Company>q2g</Company>
@@ -46,7 +46,7 @@
     </ReadLinesFromFile>
     <Exec WorkingDirectory="$(BaseDir)" Command="dotnet nuget push $(PackageOutputAbsolutePath)$(PackageId).$(PackageVersion).nupkg -k $(NugetAPIKey) -s https://api.nuget.org/v3/index.json" />
   </Target>
-	
+
   <ItemGroup>
     <PackageReference Include="GitVersionTask" Version="4.0.0" PrivateAssets="all" />
     <PackageReference Include="Google.Protobuf" Version="3.6.1" />
@@ -56,8 +56,7 @@
     <PackageReference Include="System.Interactive.Async" Version="3.2.0" />
   </ItemGroup>
 
-  <ItemGroup>	
-	<Protobuf Include="**/*.proto" />	
-    <Protobuf Update="ServerSideExtension.proto" GrpcServices="Client" />
+  <ItemGroup>
+	<Protobuf Include="**/*.proto" />
   </ItemGroup>
 </Project>
