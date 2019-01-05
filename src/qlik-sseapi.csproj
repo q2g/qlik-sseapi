@@ -15,6 +15,7 @@
     <RootNamespace>Qlik.Sse</RootNamespace>
   </PropertyGroup>
 
+  <Target Name="FixOnGitVersionTaskError" BeforeTargets="GetAssemblyVersion">
 	<CreateProperty Value="0.0.1-notgitversion" Condition="'$(GitVersion_NuGetVersion)' == ''">
 		<Output TaskParameter="Value" PropertyName="Version"/>
 	</CreateProperty>
