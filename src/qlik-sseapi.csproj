@@ -24,12 +24,12 @@
 	<Choose>
 		<When Condition="'$(OS)' == 'Windows_NT'">
 			<PropertyGroup>
-				<TargetFrameworks>netcoreapp2.0;net452;</TargetFrameworks>
+				<TargetFrameworks>netstandard2.0;net452;</TargetFrameworks>
 			</PropertyGroup>
 		</When>
 		<Otherwise>
 			<PropertyGroup>
-				<TargetFramework>netcoreapp2.0</TargetFramework>
+				<TargetFramework>netstandard2.0</TargetFramework>
 			</PropertyGroup>
 		</Otherwise>
 	</Choose>
