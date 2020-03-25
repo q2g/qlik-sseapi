@@ -1,68 +1,41 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<Copyright>Copyright © 2017</Copyright>
-		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-		<Authors>Konrad Mattheis, Martin Berthold</Authors>
-		<Company>q2g</Company>
-		<RepositoryUrl>https://github.com/q2g/qlik-sseapi/</RepositoryUrl>
-		<PackageLicenseUrl>https://raw.githubusercontent.com/q2g/qlik-sseapi/master/LICENSE</PackageLicenseUrl>
-		<PackageProjectUrl>https://www.nuget.org/packages/qlik-sseapi/</PackageProjectUrl>
-		<PackageTags>Qlik, SSE</PackageTags>
-		<Description>This packages allows to easy build a connector for the qlik sse api</Description>
+  <PropertyGroup>
+    <Copyright>Copyright (c) $([System.DateTime]::Today.ToString('yyyy'))</Copyright>
+    <Authors>akquinet finance &amp; controlling GmbH</Authors>
+    <Company>akquinet finance &amp; controlling GmbH</Company>
+    <RepositoryUrl>https://github.com/q2g/qlik-sseapi/</RepositoryUrl>
+    <PackageLicenseUrl>https://raw.githubusercontent.com/q2g/qlik-sseapi/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://www.nuget.org/packages/qlik-sseapi/</PackageProjectUrl>
+    <PackageTags>Qlik, SSE</PackageTags>
+    <Description>This packages allows to easy build a connector for the qlik sse api</Description>
+    <Version>$(GitVersion_InformationalVersion)</Version>
+    <RootNamespace>Qlik.Sse</RootNamespace>
+  </PropertyGroup>
 
-		<Version>$(GitVersion_NuGetVersion)</Version>
-		<RootNamespace>Qlik.Sse</RootNamespace>
-	</PropertyGroup>
+  <Choose>
+    <When Condition="'$(OS)' == 'Windows_NT'">
+      <PropertyGroup>
+        <TargetFrameworks>netcoreapp3.1;net461;</TargetFrameworks>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+ 
+  <ItemGroup>
+    <PackageReference Include="GitVersionTask" Version="5.2.4" PrivateAssets="all" />
+    <PackageReference Include="Google.Protobuf" Version="3.11.4" />
+    <PackageReference Include="Grpc" Version="2.27.0" />
+    <PackageReference Include="Grpc.Core" Version="2.27.0" />
+    <PackageReference Include="Grpc.Tools" Version="2.27.0" PrivateAssets="all" />
+    <PackageReference Include="System.Interactive.Async" Version="4.0.0" />
+  </ItemGroup>
 
-	<Target Name="FixOnGitVersionTaskError" BeforeTargets="GetAssemblyVersion">
-		<CreateProperty Value="0.0.1-notgitversion" Condition="'$(GitVersion_NuGetVersion)' == ''">
-			<Output TaskParameter="Value" PropertyName="Version" />
-		</CreateProperty>
-	</Target>
-
-	<Choose>
-		<When Condition="'$(OS)' == 'Windows_NT'">
-			<PropertyGroup>
-				<TargetFrameworks>netstandard2.0;net452;</TargetFrameworks>
-			</PropertyGroup>
-		</When>
-		<Otherwise>
-			<PropertyGroup>
-				<TargetFramework>netstandard2.0</TargetFramework>
-			</PropertyGroup>
-		</Otherwise>
-	</Choose>
-	<Choose>
-		<When Condition="'$(Configuration)' == 'Release'">
-			<PropertyGroup>
-				<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-			</PropertyGroup>
-		</When>
-		<Otherwise>
-			<PropertyGroup>
-				<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-			</PropertyGroup>
-		</Otherwise>
-	</Choose>
-
-	<Target Name="PublishToNugetWithAPIKey" AfterTargets="GenerateNuspec" Condition="Exists('$(SolutionDir)\..\..\nugetapikey.txt')">
-		<ReadLinesFromFile File="$(SolutionDir)\..\..\nugetapikey.txt">
-			<Output TaskParameter="Lines" PropertyName="NugetAPIKey" />
-		</ReadLinesFromFile>
-		<Exec WorkingDirectory="$(BaseDir)" Command="dotnet nuget push $(PackageOutputAbsolutePath)$(PackageId).$(PackageVersion).nupkg -k $(NugetAPIKey) -s https://api.nuget.org/v3/index.json" />
-	</Target>
-
-	<ItemGroup>
-		<PackageReference Include="GitVersionTask" Version="4.0.0" PrivateAssets="all" />
-		<PackageReference Include="Google.Protobuf" Version="3.7.0" />
-		<PackageReference Include="Grpc" Version="1.20.0" />
-		<PackageReference Include="Grpc.Core" Version="1.20.0" />
-		<PackageReference Include="Grpc.Tools" Version="1.20.0" PrivateAssets="all" />
-		<PackageReference Include="System.Interactive.Async" Version="3.2.0" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<Protobuf Include="**/*.proto" />
-	</ItemGroup>
+  <ItemGroup>
+    <Protobuf Include="**/*.proto" />
+  </ItemGroup>
 </Project>
