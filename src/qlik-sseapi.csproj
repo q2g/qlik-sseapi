@@ -24,12 +24,12 @@
 	<Choose>
 		<When Condition="'$(OS)' == 'Windows_NT'">
 			<PropertyGroup>
-				<TargetFrameworks>netcoreapp2.0;net452;</TargetFrameworks>
+				<TargetFrameworks>netstandard2.0;net452;</TargetFrameworks>
 			</PropertyGroup>
 		</When>
 		<Otherwise>
 			<PropertyGroup>
-				<TargetFramework>netcoreapp2.0</TargetFramework>
+				<TargetFramework>netstandard2.0</TargetFramework>
 			</PropertyGroup>
 		</Otherwise>
 	</Choose>
@@ -55,10 +55,10 @@
 
 	<ItemGroup>
 		<PackageReference Include="GitVersionTask" Version="4.0.0" PrivateAssets="all" />
-		<PackageReference Include="Google.Protobuf" Version="3.6.1" />
-		<PackageReference Include="Grpc" Version="1.18.0" />
-		<PackageReference Include="Grpc.Core" Version="1.18.0" />
-		<PackageReference Include="Grpc.Tools" Version="1.18.0" PrivateAssets="all" />
+		<PackageReference Include="Google.Protobuf" Version="3.7.0" />
+		<PackageReference Include="Grpc" Version="1.20.0" />
+		<PackageReference Include="Grpc.Core" Version="1.20.0" />
+		<PackageReference Include="Grpc.Tools" Version="1.20.0" PrivateAssets="all" />
 		<PackageReference Include="System.Interactive.Async" Version="3.2.0" />
 	</ItemGroup>
 
