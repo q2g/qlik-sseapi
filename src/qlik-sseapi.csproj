@@ -38,4 +38,8 @@
   <ItemGroup>
     <Protobuf Include="**/*.proto" />
   </ItemGroup>
+
+  <Target Name="GitVersion" BeforeTargets="AfterBuild">
+    <Message Importance="High" Text="++++++ GitVersion: $(GitVersion_InformationalVersion) ++++++" />
+  </Target>
 </Project>
