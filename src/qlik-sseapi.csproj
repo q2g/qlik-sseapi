@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
     <Copyright>Copyright (c) $([System.DateTime]::Today.ToString('yyyy'))</Copyright>
     <Authors>akquinet finance &amp; controlling GmbH</Authors>
     <Company>akquinet finance &amp; controlling GmbH</Company>
@@ -11,21 +12,9 @@
     <Description>This packages allows to easy build a connector for the qlik sse api</Description>
     <Version>$(GitVersion_InformationalVersion)</Version>
     <RootNamespace>Qlik.Sse</RootNamespace>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
   </PropertyGroup>
 
-  <Choose>
-    <When Condition="'$(OS)' == 'Windows_NT'">
-      <PropertyGroup>
-        <TargetFrameworks>netcoreapp3.1;net461;</TargetFrameworks>
-      </PropertyGroup>
-    </When>
-    <Otherwise>
-      <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
-      </PropertyGroup>
-    </Otherwise>
-  </Choose>
- 
   <ItemGroup>
     <PackageReference Include="GitVersionTask" Version="5.5.1" PrivateAssets="all" />
     <PackageReference Include="Google.Protobuf" Version="3.14.0" />
