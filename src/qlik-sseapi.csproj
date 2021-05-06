@@ -9,8 +9,8 @@
     <Description>This packages allows to easy build a connector for the qlik sse api</Description>
     <RootNamespace>Qlik.Sse</RootNamespace>
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
-    <AssemblyVersion>5.1.2.0</AssemblyVersion>
-    <FileVersion>5.1.2.0</FileVersion>
+    <AssemblyVersion>5.2.0.0</AssemblyVersion>
+    <FileVersion>5.2.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
