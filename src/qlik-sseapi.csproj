@@ -5,23 +5,20 @@
     <Copyright>Copyright (c) $([System.DateTime]::Today.ToString('yyyy'))</Copyright>
     <Authors>akquinet finance &amp; controlling GmbH</Authors>
     <Company>akquinet finance &amp; controlling GmbH</Company>
-    <RepositoryUrl>https://github.com/q2g/qlik-sseapi/</RepositoryUrl>
-    <PackageLicenseUrl>https://raw.githubusercontent.com/q2g/qlik-sseapi/master/LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>https://www.nuget.org/packages/qlik-sseapi/</PackageProjectUrl>
     <PackageTags>Qlik, SSE</PackageTags>
     <Description>This packages allows to easy build a connector for the qlik sse api</Description>
-    <Version>$(GitVersion_InformationalVersion)</Version>
     <RootNamespace>Qlik.Sse</RootNamespace>
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+    <AssemblyVersion>5.2.0.0</AssemblyVersion>
+    <FileVersion>5.2.0.0</FileVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="GitVersionTask" Version="5.5.1" PrivateAssets="all" />
-    <PackageReference Include="Google.Protobuf" Version="3.14.0" />
-    <PackageReference Include="Grpc" Version="2.33.1" />
-    <PackageReference Include="Grpc.Core" Version="2.33.1" />
-    <PackageReference Include="Grpc.Core.Api" Version="2.33.1" />
-    <PackageReference Include="Grpc.Tools" Version="2.33.1" PrivateAssets="all" />
+    <PackageReference Include="Google.Protobuf" Version="3.15.8" />
+    <PackageReference Include="Grpc" Version="2.37.1" />
+    <PackageReference Include="Grpc.Core" Version="2.37.1" />
+    <PackageReference Include="Grpc.Core.Api" Version="2.37.1" />
+    <PackageReference Include="Grpc.Tools" Version="2.37.1" PrivateAssets="all" />
     <PackageReference Include="System.Interactive.Async" Version="5.0.0" />
   </ItemGroup>
 
@@ -29,7 +26,10 @@
     <Protobuf Include="**/*.proto" />
   </ItemGroup>
 
-  <Target Name="GitVersion" BeforeTargets="AfterBuild">
-    <Message Importance="High" Text="++++++ GitVersion: $(GitVersion_InformationalVersion) ++++++" />
+  <Target Name="ShowAssemblyVersion" BeforeTargets="AfterBuild">
+    <GetAssemblyIdentity AssemblyFiles="$(TargetPath)">
+      <Output TaskParameter="Assemblies" ItemName="MyAssemblyIdentities" />
+    </GetAssemblyIdentity>
+    <Message Importance="High" Text="++++++ AssemblyVersion: %(MyAssemblyIdentities.Version) ++++++" />
   </Target>
 </Project>
